@@ -3,7 +3,7 @@ echo "Job name is : " ${env.JOB_NAME}
 echo "Build Number is:" ${env.BUILD_NUMBER}
 echo "Jenkins home directory is:" ${env.JENKINS_HOME}
 echo "Build URL is : " ${env.BUILD_URL}
-properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([githubPush()])])
+
 def mavenHome = tool name: 'Maven 3.8.4'
 //The below code is used to fetch the code from github
 stage('Fetch Code from GitHub')
