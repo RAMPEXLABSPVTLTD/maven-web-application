@@ -1,0 +1,28 @@
+node{
+def mavenHome = tool name: 'Maven 3.8.4'
+//The below code is used to fetch the code from github
+stage('Fetch Code from GitHub')
+{
+git branch: 'development', credentialsId: '4d77e796-f1c2-408e-afc4-9e2465cef8f7', url: 'https://github.com/RAMPEXLABSPVTLTD/maven-web-application.git'
+}
+//The below code is used to do the build using maven tool.
+stage('Build'){
+sh "${mavenHome}/bin/mvn clean package"
+}
+//to execute sonarcube report
+stage('Report'){
+sh "${mavenHome}/bin/mvn sonar:sonar"
+}
+//to store the artifact into nexus repository
+stage('store the artifact repository'){
+sh "${mavenHome}/bin/mvn deploy"
+}
+//to deploy the app into tomcat server
+stage('To deploy the app into tomcat server')
+{
+sshagent(['2c74da57-d2b0-40c0-8ef4-e7a8f1e93975']) 
+{
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.92.182.221:/opt/apache9/webapps/"
+}
+}
+}
