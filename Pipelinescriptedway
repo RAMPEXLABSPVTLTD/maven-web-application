@@ -1,4 +1,4 @@
-node{
+node('slave1-flipkart'){
 echo "Job Name is : ${env.JOB_NAME}"
 echo "Node Name is : ${env.NODE_NAME}"
 echo "Jenkins Home Directory is: ${env.JENKINS_HOME}"
