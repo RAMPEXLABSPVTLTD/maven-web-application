@@ -1,0 +1,33 @@
+node{
+echo "Job Name is : ${env.JOB_NAME}"
+echo "Node Name is : ${env.NODE_NAME}"
+echo "Jenkins Home Directory is: ${env.JENKINS_HOME}"
+echo "Jenkins URL is: ${env.JENKINS_URL}"
+def mavenHome=tool name: 'Maven 3.8.5', type: 'maven'
+//get the code from git hub
+stage('CheckOutCode'){
+git branch: 'development', credentialsId: '9917ebc0-6a43-4cb4-aa40-6f6fb36a94bd',
+ url: 'https://github.com/RAMPEXLABSPVTLTD/maven-web-application.git'
+}
+stage('Build'){
+//do the build using maven
+
+sh "${mavenHome}/bin/mvn package"
+}
+//Executing soanrcube report
+stage("executing  the sonarcube report"){
+"${mavenHome}/bin/mvn sonar:soanr"
+}
+//Upload artifacts into artifact repository
+stage("upload artifacts into artifactory repository"){
+"${mavenHome}/bin/mvn deploy"
+}
+
+//Deploy application to tomcat server
+stage('Hosted in Tomcat')
+{
+sshagent(['019eae6a-c2d4-4034-a9dd-ee5ab3cff884']) {
+sh "scp -o  StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.91.184.5:/opt/apache9/webapps"
+  }
+}
+}//node closing
