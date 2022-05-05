@@ -3,6 +3,10 @@ echo "Job Name is : ${env.JOB_NAME}"
 echo "Node Name is : ${env.NODE_NAME}"
 echo "Jenkins Home Directory is: ${env.JENKINS_HOME}"
 echo "Jenkins URL is: ${env.JENKINS_URL}"
+
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')),
+[$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
+
 def mavenHome=tool name: 'Maven 3.8.5', type: 'maven'
 //get the code from git hub
 stage('CheckOutCode'){
