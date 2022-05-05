@@ -1,32 +1,4 @@
 
-def sendSlackNotifications(String buildStatus = 'STARTED') {
-  // build status of null means successful
-  buildStatus =  buildStatus ?: 'SUCCESS'
-
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
-
-
-  // Override default values based on build status
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    colorCode = '#FFFF00'
-  } 
-else if (buildStatus == 'SUCCESS') {
-    color = 'GREEN'
-    colorCode = '#00FF00'
-  } 
-else {
-    color = 'RED'
-    colorCode = '#FF0000'
-  }
-
-  // Send notifications
-  slackSend (color: colorCode, message: summary)
-}//end od sendSlackNotifications
-
 node{
 echo "Job Name is : ${env.JOB_NAME}"
 echo "Node Name is : ${env.NODE_NAME}"
@@ -37,10 +9,6 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKe
 [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 
 def mavenHome=tool name: 'Maven 3.8.5', type: 'maven'
-try{
-
-sendSlackNotifications('STARTED')
-
 //get the code from git hub
 stage('CheckOutCode'){
 git branch: 'development', credentialsId: '9917ebc0-6a43-4cb4-aa40-6f6fb36a94bd',
@@ -66,11 +34,4 @@ stage('Hosted in Tomcat')
 sshagent(['019eae6a-c2d4-4034-a9dd-ee5ab3cff884']) {
 sh "scp -o  StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.91.184.5:/opt/apache9/webapps"
   }
-}//end of try block
-catch(e){
-currentbuild.result="FAILED"
-}
-finally{
-sendSlackNotifications(currentbuild.result)
-}
 }//node closing
