@@ -3,6 +3,11 @@ agent any
 tools {
   maven 'Maven 3.8.5'
 }
+options {
+  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+}
+triggers {
+}
 stages{
 stage('checkout code'){
 steps{
@@ -15,18 +20,23 @@ steps{
 sh "mvn clean package"
 }//steps closing
 }//stage closing
-
-
 stage('Executing Sonarcube Report'){
 steps{
 sh "mvn sonar:sonar"
 }//steps closing
 }//stage closing
-
-
 stage('Upload artifacts into Nexus'){
 steps{
 sh "mvn deploy"
+}//steps closing
+}//stage closing
+
+stage('Deploy into Tomcat Server'){
+steps{
+sshagent(['fde53619-27fe-49c9-a2ac-e4f4147994b9']) 
+{
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.91.184.5:/opt/apache9/webapps/"
+} //
 }//steps closing
 }//stage closing
 
