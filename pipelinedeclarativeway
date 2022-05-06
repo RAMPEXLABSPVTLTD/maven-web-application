@@ -1,0 +1,34 @@
+pipeline{
+agent any
+tools {
+  maven 'Maven 3.8.5'
+}
+stages{
+stage('checkout code'){
+steps{
+git branch: 'development', credentialsId: '4d77e796-f1c2-408e-afc4-9e2465cef8f7', url: 'https://github.com/RAMPEXLABSPVTLTD/maven-web-application.git'
+}//steps closing
+}//stage closing
+
+stage('build code'){
+steps{
+sh "mvn clean package"
+}//steps closing
+}//stage closing
+
+
+stage('Executing Sonarcube Report'){
+steps{
+sh "mvn sonar:sonar"
+}//steps closing
+}//stage closing
+
+
+stage('Upload artifacts into Nexus'){
+steps{
+sh "mvn deploy"
+}//steps closing
+}//stage closing
+
+}//stages closing
+}//pipeline closing
