@@ -29,7 +29,7 @@ sh "mvn clean package"
 */
 stage('Running the unit-test cases and creating packages'){
 steps{
-parllel(
+parallel(
 RunTestCases:{
 sh "mvn test"
 },
