@@ -27,6 +27,19 @@ sh "mvn clean package"
 }//steps closing
 }//stage closing
 */
+stage('Running the unit-test cases and creating packages'){
+steps{
+parllel(
+RunTestCases:{
+sh "mvn test"
+},
+CreatePackage:{
+sh "mvn package"
+}
+)
+}//Steps Closing
+}//Satge closing
+
 
 }//stages closing
 }//pipeline closing
