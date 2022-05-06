@@ -6,8 +6,6 @@ tools {
 options {
   buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
 }
-triggers {
-}
 stages{
 stage('checkout code'){
 steps{
