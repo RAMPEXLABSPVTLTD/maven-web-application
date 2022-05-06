@@ -14,7 +14,7 @@ steps{
 git branch: 'development', credentialsId: '4d77e796-f1c2-408e-afc4-9e2465cef8f7', url: 'https://github.com/RAMPEXLABSPVTLTD/maven-web-application.git'
 }//steps closing
 }//stage closing
-
+/*
 stage('Running the unittest cases'){
 steps{
 sh "mvn test"
@@ -26,6 +26,7 @@ steps{
 sh "mvn clean package"
 }//steps closing
 }//stage closing
+*/
 
 }//stages closing
 }//pipeline closing
