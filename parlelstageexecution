@@ -1,0 +1,28 @@
+pipeline{
+agent any
+tools {
+  maven 'Maven 3.8.5'
+}
+options {
+  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+  timestamps()
+}
+stages{
+stage('checkout code'){
+steps{
+git branch: 'development', credentialsId: '4d77e796-f1c2-408e-afc4-9e2465cef8f7', url: 'https://github.com/RAMPEXLABSPVTLTD/maven-web-application.git'
+}//steps closing
+}//stage closing
+
+stage('Running the unittest cases'){
+steps{
+sh "mvn test"
+}//steps closing
+}//stage closing
+
+stage('build code'){
+steps{
+sh "mvn clean package"
+}//steps closing
+}//stage closing
+}//pipeline closing
